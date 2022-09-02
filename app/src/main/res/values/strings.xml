@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">daily</string>
+    <string name="reload">Tab to Reload</string>
+
+    <!-- format -->
+    <string name="daily_api">https://news-at.zhihu.com/api/4/stories/before/%s</string>
+    <string name="story_api">https://news-at.zhihu.com/api/4/story/%d</string>
+</resources>
