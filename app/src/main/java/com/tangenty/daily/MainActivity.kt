@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 handler.sendMessage(handler.obtainMessage(UI_INIT, stories))
 
                 for (story in stories!!.stories) {
-                    if (story.imageBlob.isNullOrBlank() && story.images.isNotEmpty() && story.images[0].isNotBlank()) {
+                    if (story.imageBlob.isNullOrBlank() && !story.images.isNullOrEmpty() && !story.images[0].isNullOrBlank()) {
                         requestGet(story.images[0]).use { imageStream ->
                             val blob = imageStream.readBytes()
                             story.imageBlob =
