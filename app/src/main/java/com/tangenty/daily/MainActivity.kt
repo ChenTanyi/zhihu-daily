@@ -33,6 +33,7 @@ import java.util.concurrent.ConcurrentSkipListMap
 class MainActivity : AppCompatActivity() {
     private val gson = Gson()
     private val handler = UIHandler(this)
+    private val timeout = 10 * 1000
     private lateinit var cache : Cache
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,14 +131,16 @@ class MainActivity : AppCompatActivity() {
         saveCache(cache)
     }
 
-    fun requestGet(url: String) : InputStream {
+    private fun requestGet(url: String) : InputStream {
         return requestGet(URL(url))
     }
 
-    fun requestGet(url: URL) : InputStream {
+    private fun requestGet(url: URL) : InputStream {
         val conn = url.openConnection()
+        conn.connectTimeout = timeout
+        conn.readTimeout = timeout
         conn.setRequestProperty("User-Agent", Constants.USER_AGENT)
-        return conn.getInputStream()
+        return conn.inputStream
     }
 
     private fun loadCache() : Cache {
