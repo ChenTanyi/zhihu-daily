@@ -7,6 +7,7 @@ import android.os.Message
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -16,6 +17,7 @@ import java.net.URL
 
 class DisplayStoryActivity : AppCompatActivity() {
     private val handler = UIHandler(this)
+    private val webViewClient = WebViewClient()
     private var storyUri: String? = null
     private var storyBody: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +32,7 @@ class DisplayStoryActivity : AppCompatActivity() {
 
     fun reload(view: View?) {
         val webView = findViewById<WebView>(R.id.displayStory)
+        webView.webViewClient = webViewClient
         if (!storyBody.isNullOrBlank()) {
             webView.loadData(storyBody, "text/html; charset=utf-8", "utf-8")
         } else if (!storyUri.isNullOrBlank()) {
