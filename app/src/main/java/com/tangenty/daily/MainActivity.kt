@@ -20,6 +20,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.core.view.children
 import androidx.core.view.get
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import java.io.File
 import java.io.InputStream
 import java.io.PrintWriter
@@ -104,8 +105,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 for (story in stories!!.stories) {
                     if (story.body.isNullOrBlank()) {
-                        requestGet(story.url).use { storyStream ->
-                            story.body = storyStream.readBytes().toString(Charsets.UTF_8)
+                        requestGet(getString(R.string.story_api, story.id)).use { storyStream ->
+                            val content = storyStream.readBytes().toString(Charsets.UTF_8)
+                            Log.d(LOADT, "Receive story ${story.id}: $content")
+                            val result = gson.fromJson(content, JsonObject::class.java)
+                            story.body = result.get("body").asString
                         }
                     }
                 }
@@ -185,9 +189,16 @@ class MainActivity : AppCompatActivity() {
         row.setOnClickListener {
             val intent = Intent(context, DisplayStoryActivity::class.java).apply {
                 putExtra(Constants.EXTRA_STORY_URI, story.url)
+            }
+            startActivity(intent)
+        }
+        row.setOnLongClickListener {
+            val intent = Intent(context, DisplayStoryActivity::class.java).apply {
+                putExtra(Constants.EXTRA_STORY_URI, story.url)
                 putExtra(Constants.EXTRA_STORY_BOYD, story.body)
             }
             startActivity(intent)
+            true
         }
 
         val image = ImageView(context)
