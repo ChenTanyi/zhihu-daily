@@ -34,23 +34,9 @@ class DisplayStoryActivity : AppCompatActivity() {
         val webView = findViewById<WebView>(R.id.displayStory)
         webView.webViewClient = webViewClient
         if (!storyBody.isNullOrBlank()) {
-            webView.loadData(storyBody, "text/html; charset=utf-8", "utf-8")
+            webView.loadDataWithBaseURL(storyUri, storyBody, "text/html; charset=utf-8", "utf-8", storyUri)
         } else if (!storyUri.isNullOrBlank()) {
-            Thread {
-                try {
-                    val conn = URL(storyUri).openConnection()
-                    conn.setRequestProperty("User-Agent", Constants.USER_AGENT)
-                    conn.getInputStream().use {
-                        val content = it.readBytes().toString(Charsets.UTF_8)
-                        Log.d(RELOADT, "Receive story: $content")
-                        val msg = handler.obtainMessage(MESSAGE_RELOAD, content)
-                        handler.sendMessage(msg)
-                    }
-                } catch (e: Exception) {
-                    val msg = handler.obtainMessage(UI_SHOW_ALERT_DIALOG, e)
-                    handler.sendMessage(msg)
-                }
-            }.start()
+            webView.loadUrl(storyUri, mapOf("User-Agent" to Constants.USER_AGENT))
         } else {
             AlertDialog.Builder(this)
                 .setTitle("Error")
