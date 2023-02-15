@@ -189,12 +189,14 @@ class MainActivity : AppCompatActivity() {
         row.setOnClickListener {
             val intent = Intent(context, DisplayStoryActivity::class.java).apply {
                 putExtra(Constants.EXTRA_STORY_URI, story.url)
+                putExtra(Constants.EXTRA_STORY_TITLE, story.title)
             }
             startActivity(intent)
         }
         row.setOnLongClickListener {
             val intent = Intent(context, DisplayStoryActivity::class.java).apply {
                 putExtra(Constants.EXTRA_STORY_URI, story.url)
+                putExtra(Constants.EXTRA_STORY_TITLE, story.title)
                 putExtra(Constants.EXTRA_STORY_BOYD, story.body)
             }
             startActivity(intent)

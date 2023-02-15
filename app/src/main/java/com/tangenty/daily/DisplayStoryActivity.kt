@@ -1,10 +1,13 @@
 package com.tangenty.daily
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -19,15 +22,37 @@ class DisplayStoryActivity : AppCompatActivity() {
     private val handler = UIHandler(this)
     private val webViewClient = WebViewClient()
     private var storyUri: String? = null
+    private var storyTitle: String? = null
     private var storyBody: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_story)
 
         storyUri = intent.getStringExtra(Constants.EXTRA_STORY_URI)
+        storyTitle = intent.getStringExtra(Constants.EXTRA_STORY_TITLE)
         storyBody = intent.getStringExtra(Constants.EXTRA_STORY_BOYD)
 
         reload(null)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.story_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_share_item -> {
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TITLE, storyTitle)
+                    putExtra(Intent.EXTRA_TEXT, "$storyTitle\n$storyUri")
+                }
+                startActivity(Intent.createChooser(shareIntent, "Share To"))
+            }
+        }
+        return true
     }
 
     fun reload(view: View?) {
